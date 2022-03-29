@@ -1,0 +1,20 @@
+type User {
+  id: ID!
+  name: String!
+  contry: Contry!
+  
+  # appointments: [Appointment]
+}
+
+input CreateUserInput {
+  name: String!
+  contry: ID!
+}
+
+type Query {
+  users: [User]
+}
+
+type Mutation {
+  createUser(createUserInput: CreateUserInput): User
+}

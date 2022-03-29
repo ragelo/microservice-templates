@@ -1,0 +1,4 @@
+federation:
+  services:
+    contry: http://contry-service.default:80/graphql-federated
+    user: http://user-service.default:80/graphql-federated

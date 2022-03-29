@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+  labels:
+    app: user-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      imagePullSecrets:
+        - name: registry-creds
+      containers:
+        - name: user-service
+          imagePullPolicy: Always
+          image: {{ .Values.image }}
+          env:
+            - name: PORT
+              value: "{{ .Values.port }}"
+            - name: GRPC_PORT
+              value: "{{ .Values.grpcPort }}"
+            - name: CONTRY_SERVICE_GRPC
+              value: "{{ .Values.grpc.services.contry }}"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+spec:
+  ports:
+    - port: 80
+      targetPort: {{ .Values.port }}
+      name: user-service
+    - port: 6000
+      targetPort: {{ .Values.grpcPort }}
+      name: user-service-grpc
+  selector:
+    app: user-service

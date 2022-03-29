@@ -1,0 +1,6 @@
+port: 3000
+grpcPort: 6000
+
+grpc:
+  services:
+    contry: contry-service.default:6000

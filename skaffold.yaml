@@ -1,0 +1,62 @@
+apiVersion: skaffold/v2beta22
+kind: Config
+metadata:
+    name: UserContryService
+build:
+    local:
+      concurrency: 3
+      push: true
+    
+    artifacts:
+      - image: api-gateway
+        context: api-gateway
+        docker:
+          dockerfile: Dockerfile
+        sync:
+          infer:
+            - "*.ts"
+            - "**/*.ts"
+      
+      - image: contry-service
+        context: contry-service
+        docker:
+          dockerfile: Dockerfile
+        sync:
+          infer:
+            - "*.ts"
+            - "**/*.ts"
+            - "**/*.proto"
+            - "**/*.graphql"
+      
+      - image: user-service
+        context: user-service
+        docker:
+          dockerfile: Dockerfile
+        sync:
+          infer:
+            - "*.ts"
+            - "**/*.ts"
+            - "**/*.proto"
+            - "**/*.graphql"
+
+deploy:
+  helm:
+    releases:
+      - name: api-gateway
+        chartPath: api-gateway/.helm
+        artifactOverrides: 
+          image: api-gateway
+      - name: contry-service
+        chartPath: contry-service/.helm
+        artifactOverrides: 
+          image: contry-service
+      - name: user-service
+        chartPath: user-service/.helm
+        artifactOverrides: 
+          image: user-service
+
+portForward:
+  - resourceType: service
+    resourceName: api-gateway
+    port: 4000
+    localPort: 4001
