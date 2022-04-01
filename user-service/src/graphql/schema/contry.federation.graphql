@@ -1,3 +1,0 @@
-extend type Contry @key(fields: "id") {
-  id: ID! @external
-}
